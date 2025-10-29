@@ -6,7 +6,7 @@ const fs = require('fs');
 
 let devToolsOpened = false;
 
-class GraphicsWindow {
+class GUI {
     constructor() {
         try {
             this.window = null;
@@ -50,7 +50,7 @@ class GraphicsWindow {
     }
 }
 
-const graphicsWindow = new GraphicsWindow();
+const gui = new GUI();
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -59,24 +59,24 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on("dev-refresh", () => {
-    graphicsWindow.window.reload();
+    gui.window.reload();
 })
 
 ipcMain.on("close", () => {
-    graphicsWindow.window.close();
+    gui.window.close();
 })
 
 ipcMain.on("minimize", () => {
-    graphicsWindow.window.minimize();
+    gui.window.minimize();
 })
 
 ipcMain.on("toggle-dev-tools", () => {
 
     // Toggle the DevTools visibility based on its current state
     if (devToolsOpened) {
-        graphicsWindow.window.webContents.closeDevTools();
+        gui.window.webContents.closeDevTools();
     } else {
-        graphicsWindow.window.webContents.openDevTools();
+        gui.window.webContents.openDevTools();
     }
 })
 
@@ -89,5 +89,5 @@ ipcMain.on("edit-cache", (ev, data) => {
 
 ipcMain.on("get-cache", (ev, data) => {
     const { key } = data;
-    graphicsWindow.window.webContents.send("get-cache", cache[key]);
+    gui.window.webContents.send("get-cache", cache[key]);
 })
