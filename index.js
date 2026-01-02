@@ -3,7 +3,6 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-
 let devToolsOpened = false;
 
 class GUI {
@@ -20,33 +19,35 @@ class GUI {
     }
 
     async createWindow() {
-        this.window = new BrowserWindow({
-            width: 800,
-            height: 600,
-            minWidth: 800,   // Set the minimum width
-            minHeight: 600,  // Set the minimum height
-            frame: false,
-            webPreferences: {
-                nodeIntegration: true,
-                spellcheck: false,
-                preload: path.join(__dirname, './preload.js')
-            },
-        });
+        return new Promise(async resolve => {
+            this.window = new BrowserWindow({
+                width: 800,
+                height: 600,
+                minWidth: 800,   // Set the minimum width
+                minHeight: 600,  // Set the minimum height
+                frame: false,
+                webPreferences: {
+                    nodeIntegration: true,
+                    spellcheck: false,
+                    preload: path.join(__dirname, './preload.js')
+                },
+            });
 
-        // Uncomment to use icon:
-        // const iconPath = path.join(__dirname, './dist/images/icon.png');
-        // this.window.setIcon(iconPath);
+            // Uncomment to use icon:
+            // const iconPath = path.join(__dirname, './dist/images/icon.png');
+            // this.window.setIcon(iconPath);
 
-        const menu = Menu.buildFromTemplate([]);
-        Menu.setApplicationMenu(menu);
+            const menu = Menu.buildFromTemplate([]);
+            Menu.setApplicationMenu(menu);
 
-        this.window.setMenu(menu);
+            this.window.setMenu(menu);
 
-        this.window.loadFile('./dist/html/index.html');
+            this.window.loadFile('./src/html/index.html').then(resolve).catch(resolve);
 
-        this.window.on('closed', () => {
-            this.window = null;
-        });
+            this.window.on('closed', () => {
+                this.window = null;
+            });
+        })
     }
 }
 
